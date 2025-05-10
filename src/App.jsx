@@ -16,6 +16,7 @@ function App() {
   const [searchInput, setSearchInput] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [albums, setAlbums] = useState([]);
+  const [tracks, setTracks] = useState({}); // Add state to store tracks for each album
 
   useEffect(() => {
     let authParams = {
@@ -57,16 +58,33 @@ function App() {
       });
 
     // Get Artist Albums
-    await fetch(
+    const albumsData = await fetch(
       "https://api.spotify.com/v1/artists/" +
         artistID +
         "/albums?include_groups=album&market=US&limit=50",
       artistParams
     )
       .then((result) => result.json())
-      .then((data) => {
-        setAlbums(data.items);
-      });
+      .then((data) => data.items);
+
+    setAlbums(albumsData);
+
+    // Fetch top 3 tracks for each album
+    const tracksData = {};
+    for (const album of albumsData) {
+      const albumTracks = await fetch(
+        `https://api.spotify.com/v1/albums/${album.id}/tracks?market=US`,
+        artistParams
+      )
+        .then((result) => result.json())
+        .then((data) =>
+          data.items
+            .sort((a, b) => b.popularity - a.popularity) // Sort by popularity
+            .slice(0, 3) // Get top 3 tracks
+        );
+      tracksData[album.id] = albumTracks;
+    }
+    setTracks(tracksData);
   }
 
   return (
@@ -158,6 +176,18 @@ function App() {
                   >
                     Album Link
                   </Button>
+                  {tracks[album.id] && (
+                    <div style={{ marginTop: "10px" }}>
+                      <h6>Top Tracks:</h6>
+                      <ul>
+                        {tracks[album.id].map((track) => (
+                          <li key={track.id} style={{ color: "black" }}>
+                            {track.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </Card.Body>
               </Card>
             );
