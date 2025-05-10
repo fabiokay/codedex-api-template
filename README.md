@@ -14,5 +14,4 @@ This project was enhanced with the following features:
 - Displayed album details such as release date, total tracks, and playtime.
 - Added functionality to show the top 3 tracks for each album.
 - Moved the album link to the bottom of the card.
-- Styled the top tracks with a darker shade for better readability.
-- Added functionality to fetch and display similar albums from related artists.
+
