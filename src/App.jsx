@@ -69,7 +69,7 @@ function App() {
 
     setAlbums(albumsData);
 
-    // Fetch top 3 tracks for each album
+    // Fetch top 3 tracks and calculate playtime for each album
     const tracksData = {};
     for (const album of albumsData) {
       const albumTracks = await fetch(
@@ -77,11 +77,16 @@ function App() {
         artistParams
       )
         .then((result) => result.json())
-        .then((data) =>
-          data.items
+        .then((data) => {
+          const totalPlaytime = data.items.reduce(
+            (sum, track) => sum + track.duration_ms,
+            0
+          );
+          album.totalPlaytime = totalPlaytime; // Store total playtime in milliseconds
+          return data.items
             .sort((a, b) => b.popularity - a.popularity) // Sort by popularity
-            .slice(0, 3) // Get top 3 tracks
-        );
+            .slice(0, 3); // Get top 3 tracks
+        });
       tracksData[album.id] = albumTracks;
     }
     setTracks(tracksData);
@@ -126,6 +131,9 @@ function App() {
           }}
         >
           {albums.map((album) => {
+            const playtimeMinutes = Math.floor(album.totalPlaytime / 60000);
+            const playtimeSeconds = Math.floor((album.totalPlaytime % 60000) / 1000);
+
             return (
               <Card
                 key={album.id}
@@ -169,6 +177,13 @@ function App() {
                     }}
                   >
                     Total Tracks: {album.total_tracks}
+                  </Card.Text>
+                  <Card.Text
+                    style={{
+                      color: "black",
+                    }}
+                  >
+                    Playtime: {playtimeMinutes}m {playtimeSeconds}s
                   </Card.Text>
                   <Button
                     href={album.external_urls.spotify}
