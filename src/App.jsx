@@ -163,6 +163,13 @@ function App() {
                   >
                     Release Date: <br /> {album.release_date}
                   </Card.Text>
+                  <Card.Text
+                    style={{
+                      color: "black",
+                    }}
+                  >
+                    Total Tracks: {album.total_tracks}
+                  </Card.Text>
                   <Button
                     href={album.external_urls.spotify}
                     style={{
