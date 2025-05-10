@@ -185,19 +185,6 @@ function App() {
                   >
                     Playtime: {playtimeMinutes}m {playtimeSeconds}s
                   </Card.Text>
-                  <Button
-                    href={album.external_urls.spotify}
-                    style={{
-                      backgroundColor: "black",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "15px",
-                      borderRadius: "5px",
-                      padding: "10px",
-                    }}
-                  >
-                    Album Link
-                  </Button>
                   {tracks[album.id] && (
                     <div style={{ marginTop: "10px" }}>
                       <h6>Top Tracks:</h6>
@@ -211,6 +198,27 @@ function App() {
                     </div>
                   )}
                 </Card.Body>
+                <Card.Footer
+                  style={{
+                    backgroundColor: "white",
+                    borderTop: "none",
+                    textAlign: "center",
+                  }}
+                >
+                  <Button
+                    href={album.external_urls.spotify}
+                    style={{
+                      backgroundColor: "black",
+                      color: "white",
+                      fontWeight: "bold",
+                      fontSize: "15px",
+                      borderRadius: "5px",
+                      padding: "10px",
+                    }}
+                  >
+                    Album Link
+                  </Button>
+                </Card.Footer>
               </Card>
             );
           })}
